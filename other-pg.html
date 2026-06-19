@@ -461,13 +461,13 @@ function calculate(){
     if(total <= 0){ alert('Please enter valid credits.'); return; }
     const A = ((core*cc) + (c1*c1c) + (c2*c2c)) / total;
     const B = A * 100;
-    const C = core * cc;
+    const C = core * cc * 60;
     D = ((B + C) * 1000) / 1600;
     details = `
-      <div class="wrow"><span>Weighted avg CGPA (A)</span><span>${A.toFixed(6)}</span></div>
-      <div class="wrow"><span>Percentage equivalent (B = A × 100)</span><span>${B.toFixed(6)}</span></div>
-      <div class="wrow"><span>Core credit product (C = CGPA × credits)</span><span>${C.toFixed(6)}</span></div>
-      <div class="wrow"><span>Base index D = (B+C) × 1000 / 1600</span><span>${D.toFixed(6)}</span></div>`;
+      <div class="wrow"><span>Weighted avg CGPA (A)</span><span>${A.toFixed(3)}</span></div>
+      <div class="wrow"><span>Percentage equivalent (B = A × 100)</span><span>${B.toFixed(3)}</span></div>
+      <div class="wrow"><span>Core credit product (C = CGPA × credits)</span><span>${C.toFixed(3)}</span></div>
+      <div class="wrow"><span>Base index D = (B+C) × 1000 / 1600</span><span>${D.toFixed(3)}</span></div>`;
   } else {
     const obt = (+document.getElementById('mainObt').value||0) + (+document.getElementById('sub1Obt').value||0) + (+document.getElementById('sub2Obt').value||0);
     const max = (+document.getElementById('mainMax').value||0) + (+document.getElementById('sub1Max').value||0) + (+document.getElementById('sub2Max').value||0);
