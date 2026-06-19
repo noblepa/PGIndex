@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MA English Index Mark Calculator · MGU</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy:   #0d2b55;
+    --blue:   #1a56a0;
+    --accent: #c8922a;
+    --green:  #065f46;
+    --light:  #f5f7fa;
+    --white:  #ffffff;
+    --muted:  #64748b;
+    --border: #e2e8f0;
+    --card-radius: 14px;
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-body: 'Inter', system-ui, sans-serif;
+  }
+
+  body { font-family: var(--font-body); background: var(--light); color: var(--navy); min-height: 100vh; display: flex; flex-direction: column; }
+
+  /* Header */
+  header { background: var(--navy); padding: 0 2rem; }
+  .header-inner { max-width: 860px; margin: 0 auto; padding: 1.25rem 0; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .logo-mark { width: 36px; height: 36px; background: var(--accent); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .logo-mark svg { display: block; }
+  .logo-text { font-size: 15px; font-weight: 600; color: #fff; line-height: 1.3; }
+  .logo-sub { font-size: 11px; font-weight: 400; color: rgba(255,255,255,0.5); letter-spacing: 0.04em; }
+  .back-link { font-size: 13px; color: rgba(255,255,255,0.6); text-decoration: none; display: flex; align-items: center; gap: 5px; transition: color 0.15s; }
+  .back-link:hover { color: #fff; }
+
+  /* Hero */
+  .hero { background: var(--navy); padding: 3rem 2rem 4.5rem; position: relative; overflow: hidden; }
+  .hero::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 60px; background: var(--light); clip-path: ellipse(55% 100% at 50% 100%); }
+  .hero-inner { max-width: 580px; margin: 0 auto; text-align: center; position: relative; z-index: 1; }
+  .hero-eyebrow { display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; }
+  .hero h1 { font-family: var(--font-display); font-size: clamp(24px, 4vw, 36px); font-weight: 600; color: #fff; line-height: 1.25; margin-bottom: 0.75rem; }
+  .hero-desc { font-size: 14px; color: rgba(255,255,255,0.55); line-height: 1.7; }
+
+  /* Main */
+  main { flex: 1; max-width: 780px; width: 100%; margin: 0 auto; padding: 3rem 2rem 4rem; }
+
+  /* Cards */
+  .card { background: var(--white); border: 1px solid var(--border); border-radius: var(--card-radius); padding: 1.5rem; margin-bottom: 1.25rem; }
+  .card-title { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.25rem; display: flex; align-items: center; gap: 8px; }
+
+  /* Fields */
+  .field { margin-bottom: 1rem; }
+  .field:last-child { margin-bottom: 0; }
+  label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 6px; font-weight: 500; }
+  select, input[type=number] { width: 100%; padding: 9px 12px; font-size: 14px; font-family: var(--font-body); border: 1px solid var(--border); border-radius: 8px; background: var(--white); color: var(--navy); outline: none; transition: border-color 0.15s, box-shadow 0.15s; }
+  select:focus, input[type=number]:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(26,86,160,0.1); }
+
+  /* Info / alert bars */
+  .info-bar { display: flex; align-items: flex-start; gap: 10px; padding: 10px 14px; border-radius: 8px; border: 1px solid; font-size: 13px; line-height: 1.6; margin-top: 0.75rem; }
+  .info-bar.blue { background: #eff6ff; border-color: #bfdbfe; color: #1e40af; }
+  .info-bar.amber { background: #fffbeb; border-color: #fde68a; color: #92400e; }
+  .info-bar.green { background: #ecfdf5; border-color: #6ee7b7; color: var(--green); }
+  .info-bar svg { flex-shrink: 0; margin-top: 1px; }
+
+  /* Grid */
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+  /* Section divider inside card */
+  .sec-divider { font-size: 12px; font-weight: 600; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; padding: 0.75rem 0 0.5rem; border-top: 1px solid var(--border); margin-top: 0.5rem; }
+
+  /* Mark input row */
+  .mark-row { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px; align-items: end; margin-bottom: 10px; }
+  .mark-row label { font-size: 13px; color: var(--navy); font-weight: 500; margin-bottom: 4px; }
+  .mark-row .sub-label { font-size: 11px; color: var(--muted); font-weight: 400; }
+
+  /* Badge */
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+  .badge-core { background: #dbeafe; color: #1e40af; }
+  .badge-opt  { background: #fef3c7; color: #92400e; }
+  .badge-comp { background: #d1fae5; color: #065f46; }
+
+  /* Checkbox */
+  .check-row { display: flex; align-items: center; gap: 10px; padding: 12px 0 0; border-top: 1px solid var(--border); margin-top: 0.75rem; }
+  .check-row input[type=checkbox] { width: 16px; height: 16px; cursor: pointer; accent-color: var(--blue); }
+  .check-row label { margin: 0; font-size: 14px; color: var(--navy); cursor: pointer; }
+
+  /* Buttons */
+  .btn-row { display: flex; gap: 12px; margin-top: 1.5rem; }
+  .btn-primary { flex: 1; padding: 13px; font-size: 15px; font-weight: 600; font-family: var(--font-body); background: var(--navy); color: #fff; border: none; border-radius: 9px; cursor: pointer; transition: background 0.15s; }
+  .btn-primary:hover { background: var(--blue); }
+  .btn-secondary { padding: 13px 20px; font-size: 14px; font-weight: 500; font-family: var(--font-body); background: var(--white); color: var(--navy); border: 1px solid var(--border); border-radius: 9px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: background 0.15s; }
+  .btn-secondary:hover { background: var(--light); }
+
+  /* Result */
+  .result-card { background: var(--white); border: 1.5px solid var(--blue); border-radius: var(--card-radius); padding: 1.75rem; margin-top: 1.5rem; display: none; }
+  .result-label { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+  .result-value { font-family: var(--font-display); font-size: 42px; font-weight: 600; color: var(--blue); line-height: 1; }
+
+  .working { margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid var(--border); display: none; }
+  .wrow { display: flex; justify-content: space-between; align-items: baseline; padding: 5px 0; font-size: 13px; color: var(--muted); }
+  .wrow span:last-child { font-weight: 600; color: var(--navy); font-family: monospace; font-size: 13px; }
+  .wrow.total { border-top: 1px solid var(--border); margin-top: 6px; padding-top: 10px; font-size: 14px; font-weight: 600; color: var(--navy); }
+  .wrow.total span:last-child { color: var(--blue); font-size: 15px; }
+
+  .hidden { display: none !important; }
+
+  /* Footer */
+  footer { border-top: 1px solid var(--border); padding: 1.25rem 2rem; }
+  .footer-inner { max-width: 860px; margin: 0 auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem; }
+  .footer-credit { font-size: 13px; color: var(--muted); }
+  .footer-credit strong { color: var(--navy); font-weight: 600; }
+  .footer-disclaimer { font-size: 12px; color: #94a3b8; }
+
+  @media (max-width: 580px) {
+    .grid2 { grid-template-columns: 1fr; }
+    .mark-row { grid-template-columns: 1fr 1fr; }
+    .mark-row .col-label { grid-column: 1 / -1; }
+    .btn-row { flex-direction: column; }
+    .footer-inner { flex-direction: column; text-align: center; }
+    main { padding: 2rem 1.25rem 3rem; }
+  }
+
+  @media print {
+    header, .btn-row, footer { display: none; }
+    body { background: #fff; }
+    .card { border: 1px solid #ccc; }
+    .result-card { display: block !important; border-color: #333; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a class="logo" href="index.html">
+      <div class="logo-mark">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M3 15 L10 4 L17 15" stroke="#fff" stroke-width="2" stroke-linejoin="round" fill="none"/>
+          <path d="M6 11 L14 11" stroke="#fff" stroke-width="2"/>
+        </svg>
+      </div>
+      <div>
+        <div class="logo-text">PG Index Mark Calculator</div>
+        <div class="logo-sub">for MGU</div>
+      </div>
+    </a>
+    <a class="back-link" href="index.html">← Back to programmes</a>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="hero-inner">
+    <span class="hero-eyebrow">MA English · Post Graduate Admissions</span>
+    <h1>Index Mark Calculator</h1>
+    <p class="hero-desc">Supports all undergraduate models (I, II, III) under CBCSS 2009, CBCSS 2013/2017, and Pre-CBCSS patterns.</p>
+  </div>
+</div>
+
+<main>
+
+  <!-- Step 1: Graduate Type -->
+  <div class="card">
+    <div class="card-title">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+      Step 1 — Your undergraduate background
+    </div>
+
+    <div class="field">
+      <label>Type of graduate</label>
+      <select id="gradType" onchange="updateAll()">
+        <option value="english">English graduate (Model I / II / III)</option>
+        <option value="other">Graduate from other faculty (Language &amp; Literature, Social Science, Science, Oriental Studies)</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Examination pattern</label>
+      <select id="pattern" onchange="updateAll()">
+        <option value="cbcss2009">CBCSS Pattern (2009)</option>
+        <option value="cbcss2013">CBCSS Pattern (2013 / 2017)</option>
+        <option value="pre">Pre-CBCSS Pattern</option>
+      </select>
+    </div>
+
+    <!-- English model — only for English grads -->
+    <div class="field" id="modelField">
+      <label>English model</label>
+      <select id="engModel" onchange="updateAll()">
+        <option value="1">Model I English (Core or Part I Common — whichever is higher)</option>
+        <option value="2">Model II English (Part III Core/Main only)</option>
+        <option value="3">Model III English — Double Main / Triple Main (Core papers only)</option>
+      </select>
+    </div>
+
+    <div id="reserveNote" class="info-bar green hidden">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      75% of total seats are reserved for English graduates (Model I / II / III).
+    </div>
+  </div>
+
+  <!-- Step 2: Marks / CGPA -->
+  <div class="card" id="marksCard">
+    <div class="card-title">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="16" y2="14"/></svg>
+      Step 2 — Marks / CGPA
+    </div>
+
+    <!-- ── CBCSS 2009 English ── -->
+    <div id="sec_cbcss2009_english_1" class="hidden">
+      <div class="info-bar blue">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Index is based on the <strong>higher</strong> of Part III Core CGPA or Part I Common CGPA, converted to marks out of 1000 (CGPA × 25 × 10).
+      </div>
+      <div class="grid2" style="margin-top:1rem">
+        <div class="field">
+          <label><span class="badge badge-core">Core</span> Part III Core CGPA <span class="sub-label">(out of 4.00)</span></label>
+          <input type="number" step="0.01" id="e09_core" placeholder="0.00">
+        </div>
+        <div class="field">
+          <label><span class="badge badge-opt">Common</span> Part I Common CGPA <span class="sub-label">(out of 4.00)</span></label>
+          <input type="number" step="0.01" id="e09_common" placeholder="0.00">
+        </div>
+      </div>
+    </div>
+
+    <div id="sec_cbcss2009_english_2" class="hidden">
+      <div class="info-bar blue">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Index is based on Part III Core CGPA only (CGPA × 25 × 10).
+      </div>
+      <div class="field" style="margin-top:1rem">
+        <label><span class="badge badge-core">Core</span> Part III Core CGPA <span class="sub-label">(out of 4.00)</span></label>
+        <input type="number" step="0.01" id="e09_core2" placeholder="0.00">
+      </div>
+    </div>
+
+    <div id="sec_cbcss2009_english_3" class="hidden">
+      <div class="info-bar blue">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Index is based on Core papers CGPA only (CGPA × 25 × 10).
+      </div>
+      <div class="field" style="margin-top:1rem">
+        <label><span class="badge badge-core">Core</span> Core papers CGPA <span class="sub-label">(out of 4.00)</span></label>
+        <input type="number" step="0.01" id="e09_core3" placeholder="0.00">
+      </div>
+    </div>
+
+    <!-- ── CBCSS 2013 English ── -->
+    <div id="sec_cbcss2013_english_1" class="hidden">
+      <div class="info-bar blue">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Index is based on the <strong>higher</strong> of Part III Core CCPA or Part I Common CCPA, converted to 1000 (CCPA × 10 × 10).
+      </div>
+      <div class="grid2" style="margin-top:1rem">
+        <div class="field">
+          <label><span class="badge badge-core">Core</span> Part III Core CCPA <span class="sub-label">(out of 10.00)</span></label>
+          <input type="number" step="0.01" id="e13_core" placeholder="0.00">
+        </div>
+        <div class="field">
+          <label><span class="badge badge-opt">Common</span> Part I Common CCPA <span class="sub-label">(out of 10.00)</span></label>
+          <input type="number" step="0.01" id="e13_common" placeholder="0.00">
+        </div>
+      </div>
+    </div>
+
+    <div id="sec_cbcss2013_english_2" class="hidden">
+      <div class="info-bar blue">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Index is based on Part III Core CCPA only (CCPA × 10 × 10).
+      </div>
+      <div class="field" style="margin-top:1rem">
+        <label><span class="badge badge-core">Core</span> Part III Core CCPA <span class="sub-label">(out of 10.00)</span></label>
+        <input type="number" step="0.01" id="e13_core2" placeholder="0.00">
+      </div>
+    </div>
+
+    <div id="sec_cbcss2013_english_3" class="hidden">
+      <div class="info-bar blue">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Index is based on Core papers CCPA only (CCPA × 10 × 10).
+      </div>
+      <div class="field" style="margin-top:1rem">
+        <label><span class="badge badge-core">Core</span> Core papers CCPA <span class="sub-label">(out of 10.00)</span></label>
+        <input type="number" step="0.01" id="e13_core3" placeholder="0.00">
+      </div>
+    </div>
+
+    <!-- ── Pre-CBCSS English ── -->
+    <div id="sec_pre_english_1" class="hidden">
+      <div class="info-bar blue">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Index is based on the <strong>higher</strong> of Part III main/part I English, converted to 1000.
+      </div>
+      <div class="grid2" style="margin-top:1rem">
+        <div class="field">
+          <label><span class="badge badge-core">Main</span> Part III Main marks obtained</label>
+          <input type="number" id="pre_main_obt" placeholder="0">
+        </div>
+        <div class="field">
+          <label>Part III Main maximum marks</label>
+          <input type="number" id="pre_main_max" placeholder="0">
+        </div>
+        <div class="field">
+          <label><span class="badge badge-opt">Part I</span> Part I English marks obtained</label>
+          <input type="number" id="pre_p1_obt" placeholder="0">
+        </div>
+        <div class="field">
+          <label>Part I English maximum marks</label>
+          <input type="number" id="pre_p1_max" placeholder="0">
+        </div>
+      </div>
+    </div>
+
+    <div id="sec_pre_english_23" class="hidden">
+      <div class="info-bar blue">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Index is based on Part III main/core marks converted to 1000.
+      </div>
+      <div class="grid2" style="margin-top:1rem">
+        <div class="field">
+          <label><span class="badge badge-core">Core / Main</span> Marks obtained</label>
+          <input type="number" id="pre_core_obt" placeholder="0">
+        </div>
+        <div class="field">
+          <label>Maximum marks</label>
+          <input type="number" id="pre_core_max" placeholder="0">
+        </div>
+      </div>
+    </div>
+
+    <!-- ── OTHER faculty CBCSS 2009 ── -->
+    <div id="sec_cbcss2009_other" class="hidden">
+      <div class="info-bar amber">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Index is based on Part I Common CGPA (CGPA × 25 × 10).
+      </div>
+      <div class="field" style="margin-top:1rem">
+        <label><span class="badge badge-opt">Part I</span> Part I Common CGPA <span class="sub-label">(out of 4.00)</span></label>
+        <input type="number" step="0.01" id="oth09_cgpa" placeholder="0.00">
+      </div>
+    </div>
+
+    <!-- ── OTHER faculty CBCSS 2013 ── -->
+    <div id="sec_cbcss2013_other" class="hidden">
+      <div class="info-bar amber">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Index is based on Part I Common CCPA (CCPA × 10 × 10).
+      </div>
+      <div class="field" style="margin-top:1rem">
+        <label><span class="badge badge-opt">Part I</span> Part I Common CCPA <span class="sub-label">(out of 10.00)</span></label>
+        <input type="number" step="0.01" id="oth13_ccpa" placeholder="0.00">
+      </div>
+    </div>
+
+    <!-- ── OTHER faculty Pre-CBCSS ── -->
+    <div id="sec_pre_other" class="hidden">
+      <div class="info-bar amber">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Marks secured for Part I English are converted to 1000. Marks must be out of 300; minimum 19 credits required for Part I English.
+      </div>
+      <div class="grid2" style="margin-top:1rem">
+        <div class="field">
+          <label><span class="badge badge-opt">Part I</span> Part I English marks obtained</label>
+          <input type="number" id="oth_pre_obt" placeholder="0">
+        </div>
+        <div class="field">
+          <label>Maximum marks <span class="sub-label">(should be 300)</span></label>
+          <input type="number" id="oth_pre_max" placeholder="300" value="300">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 3: Weightage -->
+  <div class="card" id="weightCard">
+    <div class="card-title">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
+      Step 3 — Core course weightage
+    </div>
+    <div id="weightInfo" class="info-bar blue" style="margin-bottom:1rem">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span id="weightInfoText"></span>
+    </div>
+    <div class="field">
+      <label>Apply core course weightage?</label>
+      <select id="weightageApply" onchange="updateAll()">
+        <option value="yes">Yes — apply weightage</option>
+        <option value="no">No weightage</option>
+      </select>
+    </div>
+    <div class="field" id="weightPctField">
+      <label>Weightage percentage</label>
+      <select id="weightagePct">
+        <option value="10">10% (English Language &amp; Literature Model I / II)</option>
+        <option value="5">5% (English Literature &amp; Communication Studies / Journalism Model III)</option>
+      </select>
+    </div>
+    <p style="font-size:12px;color:var(--muted);margin-top:8px">Weightage is applied on marks standardised to 600.</p>
+  </div>
+
+  <!-- Step 4: Bonuses -->
+  <div class="card">
+    <div class="card-title">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Step 4 — Additional marks &amp; deductions
+    </div>
+    <div class="grid2">
+      <div class="field">
+        <label>NSS / NCC bonus</label>
+        <select id="bonus">
+          <option value="0">None</option>
+          <option value="5">NSS (+5)</option>
+          <option value="5">NCC A certificate (+5)</option>
+          <option value="10">NCC B certificate (+10)</option>
+          <option value="10">NCC C certificate (+10)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Ex-serviceman</label>
+        <select id="ex">
+          <option value="0">No</option>
+          <option value="15">Yes (+15)</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label>Handicap deduction</label>
+      <input id="handicap" type="number" value="0" placeholder="0">
+    </div>
+    <div class="check-row">
+      <input id="showWorking" type="checkbox" checked>
+      <label for="showWorking">Show detailed working</label>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn-primary" onclick="calculate()">Calculate index mark</button>
+    <button class="btn-secondary" onclick="window.print()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      Print
+    </button>
+  </div>
+
+  <!-- Result -->
+  <div class="result-card" id="resultCard">
+    <div class="result-label">Final index mark</div>
+    <div class="result-value" id="finalVal">—</div>
+    <div class="working" id="workingBlock"></div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-credit">Designed by <strong>Dr. Noble P. Abraham</strong></div>
+    <div class="footer-disclaimer">For guidance only · Verify with the latest MGU prospectus</div>
+  </div>
+</footer>
+
+<script>
+// ── Helpers ──────────────────────────────────────────────
+function v(id){ return parseFloat(document.getElementById(id).value) || 0; }
+function el(id){ return document.getElementById(id); }
+function hide(id){ el(id).classList.add('hidden'); }
+function show(id){ el(id).classList.remove('hidden'); }
+
+// All dynamic section ids
+const ALL_SECS = [
+  'sec_cbcss2009_english_1','sec_cbcss2009_english_2','sec_cbcss2009_english_3',
+  'sec_cbcss2013_english_1','sec_cbcss2013_english_2','sec_cbcss2013_english_3',
+  'sec_pre_english_1','sec_pre_english_23',
+  'sec_cbcss2009_other','sec_cbcss2013_other','sec_pre_other'
+];
+
+function updateAll(){
+  const grad    = el('gradType').value;
+  const pattern = el('pattern').value;
+  const model   = el('engModel').value;
+
+  // Show/hide model selector
+  if(grad === 'english'){ show('modelField'); show('reserveNote'); }
+  else                  { hide('modelField'); hide('reserveNote'); }
+
+  // Hide all sections first
+  ALL_SECS.forEach(hide);
+
+  // Show correct section
+  if(grad === 'english'){
+    if(pattern === 'cbcss2009') show('sec_cbcss2009_english_' + model);
+    if(pattern === 'cbcss2013') show('sec_cbcss2013_english_' + model);
+    if(pattern === 'pre'){
+      if(model === '1') show('sec_pre_english_1');
+      else              show('sec_pre_english_23');
+    }
+    // Weightage info
+    show('weightCard');
+    if(model === '1' || model === '2'){
+      el('weightInfoText').textContent = '10% weightage on standardised marks (out of 600) is applicable for English Language & Literature Model I / II candidates.';
+      el('weightagePct').value = '10';
+    } else {
+      el('weightInfoText').textContent = '5% weightage on standardised marks (out of 600) is applicable for English Literature & Communication Studies / Journalism Model III candidates.';
+      el('weightagePct').value = '5';
+    }
+  } else {
+    // other faculty
+    if(pattern === 'cbcss2009') show('sec_cbcss2009_other');
+    if(pattern === 'cbcss2013') show('sec_cbcss2013_other');
+    if(pattern === 'pre')       show('sec_pre_other');
+    hide('weightCard');
+  }
+}
+
+// ── Main calculation ──────────────────────────────────────
+function calculate(){
+  const grad    = el('gradType').value;
+  const pattern = el('pattern').value;
+  const model   = el('engModel').value;
+
+  let baseMarks = 0;   // marks out of 1000 before weightage/bonuses
+  let details   = '';
+  let usedLabel = '';
+
+  // ── English graduates ──
+  if(grad === 'english'){
+
+    if(pattern === 'cbcss2009'){
+      if(model === '1'){
+        const core   = v('e09_core');
+        const common = v('e09_common');
+        const higher = Math.max(core, common);
+        usedLabel = higher === core ? 'Part III Core CGPA' : 'Part I Common CGPA';
+        baseMarks = higher * 25 * 10;
+        details += `<div class="wrow"><span>Part III Core CGPA</span><span>${core.toFixed(2)}</span></div>
+                    <div class="wrow"><span>Part I Common CGPA</span><span>${common.toFixed(2)}</span></div>
+                    <div class="wrow"><span>Higher value used (${usedLabel})</span><span>${higher.toFixed(2)}</span></div>
+                    <div class="wrow"><span>Converted to 1000 (× 25 × 10)</span><span>${baseMarks.toFixed(4)}</span></div>`;
+      } else {
+        const cgpa = model === '2' ? v('e09_core2') : v('e09_core3');
+        const label = model === '2' ? 'Part III Core CGPA' : 'Core papers CGPA';
+        baseMarks = cgpa * 25 * 10;
+        details += `<div class="wrow"><span>${label}</span><span>${cgpa.toFixed(2)}</span></div>
+                    <div class="wrow"><span>Converted to 1000 (× 25 × 10)</span><span>${baseMarks.toFixed(4)}</span></div>`;
+      }
+    }
+
+    else if(pattern === 'cbcss2013'){
+      if(model === '1'){
+        const core   = v('e13_core');
+        const common = v('e13_common');
+        const higher = Math.max(core, common);
+        usedLabel = higher === core ? 'Part III Core CCPA' : 'Part I Common CCPA';
+        baseMarks = higher * 10 * 10;
+        details += `<div class="wrow"><span>Part III Core CCPA</span><span>${core.toFixed(2)}</span></div>
+                    <div class="wrow"><span>Part I Common CCPA</span><span>${common.toFixed(2)}</span></div>
+                    <div class="wrow"><span>Higher value used (${usedLabel})</span><span>${higher.toFixed(2)}</span></div>
+                    <div class="wrow"><span>Converted to 1000 (× 10 × 10)</span><span>${baseMarks.toFixed(4)}</span></div>`;
+      } else {
+        const ccpa = model === '2' ? v('e13_core2') : v('e13_core3');
+        const label = model === '2' ? 'Part III Core CCPA' : 'Core papers CCPA';
+        baseMarks = ccpa * 10 * 10;
+        details += `<div class="wrow"><span>${label}</span><span>${ccpa.toFixed(2)}</span></div>
+                    <div class="wrow"><span>Converted to 1000 (× 10 × 10)</span><span>${baseMarks.toFixed(4)}</span></div>`;
+      }
+    }
+
+    else if(pattern === 'pre'){
+      if(model === '1'){
+        const mainObt = v('pre_main_obt'), mainMax = v('pre_main_max');
+        const p1Obt   = v('pre_p1_obt'),  p1Max   = v('pre_p1_max');
+        if(mainMax <= 0 && p1Max <= 0){ alert('Please enter maximum marks.'); return; }
+        const mainPct = mainMax > 0 ? (mainObt / mainMax) * 1000 : 0;
+        const p1Pct   = p1Max   > 0 ? (p1Obt   / p1Max)   * 1000 : 0;
+        baseMarks = Math.max(mainPct, p1Pct);
+        usedLabel = baseMarks === mainPct ? 'Part III Main' : 'Part I English';
+        details += `<div class="wrow"><span>Part III Main → out of 1000</span><span>${mainPct.toFixed(4)}</span></div>
+                    <div class="wrow"><span>Part I English → out of 1000</span><span>${p1Pct.toFixed(4)}</span></div>
+                    <div class="wrow"><span>Higher value used (${usedLabel})</span><span>${baseMarks.toFixed(4)}</span></div>`;
+      } else {
+        const obt = v('pre_core_obt'), max = v('pre_core_max');
+        if(max <= 0){ alert('Please enter maximum marks.'); return; }
+        baseMarks = (obt / max) * 1000;
+        details += `<div class="wrow"><span>Marks obtained</span><span>${obt}</span></div>
+                    <div class="wrow"><span>Maximum marks</span><span>${max}</span></div>
+                    <div class="wrow"><span>Converted to 1000</span><span>${baseMarks.toFixed(4)}</span></div>`;
+      }
+    }
+
+  }
+
+  // ── Other faculty graduates ──
+  else {
+    if(pattern === 'cbcss2009'){
+      const cgpa = v('oth09_cgpa');
+      baseMarks = cgpa * 25 * 10;
+      details += `<div class="wrow"><span>Part I Common CGPA</span><span>${cgpa.toFixed(2)}</span></div>
+                  <div class="wrow"><span>Converted to 1000 (× 25 × 10)</span><span>${baseMarks.toFixed(4)}</span></div>`;
+    } else if(pattern === 'cbcss2013'){
+      const ccpa = v('oth13_ccpa');
+      baseMarks = ccpa * 10 * 10;
+      details += `<div class="wrow"><span>Part I Common CCPA</span><span>${ccpa.toFixed(2)}</span></div>
+                  <div class="wrow"><span>Converted to 1000 (× 10 × 10)</span><span>${baseMarks.toFixed(4)}</span></div>`;
+    } else {
+      const obt = v('oth_pre_obt'), max = v('oth_pre_max') || 300;
+      baseMarks = (obt / max) * 1000;
+      details += `<div class="wrow"><span>Part I English marks obtained</span><span>${obt}</span></div>
+                  <div class="wrow"><span>Maximum marks</span><span>${max}</span></div>
+                  <div class="wrow"><span>Converted to 1000</span><span>${baseMarks.toFixed(4)}</span></div>`;
+    }
+  }
+
+  if(baseMarks <= 0){ alert('Please enter valid marks or CGPA values.'); return; }
+
+  // ── Weightage ──
+  let weightage = 0;
+  if(grad === 'english' && el('weightageApply').value === 'yes'){
+    const pct = parseFloat(el('weightagePct').value) / 100;
+    // Standardise to 600 first, apply weightage
+    const std600 = (baseMarks / 1000) * 600;
+    weightage = std600 * pct;
+    details += `<div class="wrow"><span>Standardised to 600</span><span>${std600.toFixed(4)}</span></div>
+                <div class="wrow"><span>Weightage (${parseFloat(el('weightagePct').value)}% of std. marks)</span><span>${weightage.toFixed(4)}</span></div>`;
+  }
+
+  const bonus    = parseFloat(el('bonus').value)    || 0;
+  const ex       = parseFloat(el('ex').value)       || 0;
+  const handicap = parseFloat(el('handicap').value) || 0;
+
+  const finalIndex = baseMarks + weightage + bonus + ex - handicap;
+
+  el('finalVal').textContent = finalIndex.toFixed(2);
+
+  const rc = el('resultCard');
+  rc.style.display = 'block';
+
+  const wb = el('workingBlock');
+  if(el('showWorking').checked){
+    wb.innerHTML = details +
+      `<div class="wrow"><span>Base index mark</span><span>${baseMarks.toFixed(4)}</span></div>
+       <div class="wrow"><span>Core course weightage</span><span>+${weightage.toFixed(4)}</span></div>
+       <div class="wrow"><span>NSS / NCC bonus</span><span>+${bonus}</span></div>
+       <div class="wrow"><span>Ex-serviceman bonus</span><span>+${ex}</span></div>
+       <div class="wrow"><span>Handicap deduction</span><span>−${handicap}</span></div>
+       <div class="wrow total"><span>Final index mark</span><span>${finalIndex.toFixed(2)}</span></div>`;
+    wb.style.display = 'block';
+  } else {
+    wb.style.display = 'none';
+  }
+
+  rc.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// Init
+updateAll();
+</script>
+</body>
+</html>
